@@ -438,8 +438,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EndlessLevelHandler
   sectionsPrefabs:
-  - {fileID: 8994706589376671630, guid: 63f1a246373a3480ca0d71b58133ba0d, type: 3}
   - {fileID: 4785358434650738742, guid: 7b4a74f231ee6466e889c8a3fc8dfc6b, type: 3}
+  - {fileID: 4785358434650738742, guid: b102f81284d054a45b9845d962637b06, type: 3}
+  - {fileID: 4785358434650738742, guid: 14c775ebb621e46b29cbbabb06492009, type: 3}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
