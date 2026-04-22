@@ -1,69 +1,87 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CarHandler : MonoBehaviour
 {
-    [SerializeField]
-    Rigidbody rb;
-    
-    //Multipliers
-    float accelerationMultiplier = 3;
-    float breaksmultiplier = 15;
-    float steeringMultiplier = 5;
+    [SerializeField] Rigidbody rb;
 
-    //Input
+    [Header("Car Settings")]
+    [SerializeField] float maxSpeed = 10f;
+    [SerializeField] float acceleration = 15f;
+    [SerializeField] float braking = 20f;
+    [SerializeField] float steering = 130f;
+    [SerializeField] float grip = 5f;
+
     Vector2 input = Vector2.zero;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void FixedUpdate()
     {
+        ApplyAcceleration();
+        ApplySteering();
+        ApplyGrip();
+        LimitSpeed();
+    }
+
+    void ApplyAcceleration()
+    {
+        float localVelocityZ = transform.InverseTransformDirection(rb.linearVelocity).z;
+
         if (input.y > 0)
-            Accelerate();
-        else 
-            rb.linearDamping = 0.2f;
-        
-        if (input.y < 0)
-            Brake();
-
-        Steer();
-    }
-
-    void Accelerate()
-    {
-       rb.linearDamping = 0;
-
-       rb.AddForce(rb.transform.forward * 10 * accelerationMultiplier * input.y);
-    }
-
-    void Brake()
-    {
-        //Dont brake unless the car is moving forward
-        if (rb.linearVelocity.z <= 0)
         {
-            return;
+            // Acelerar
+            rb.linearDamping = 0.5f;
+            rb.AddForce(transform.forward * acceleration, ForceMode.Acceleration);
         }
-
-        rb.AddForce(rb.transform.forward * breaksmultiplier * input.y);
+        else if (input.y < 0)
+        {
+            // Travar apenas se estiver a mover para a frente
+            rb.linearDamping = 0.5f;
+            if (localVelocityZ > 0.1f)
+                rb.AddForce(-transform.forward * braking, ForceMode.Acceleration);
+        }
+        else
+        {
+            // Sem input — abranda naturalmente
+            rb.linearDamping = 3f;
+        }
     }
 
-    void Steer()
+    void ApplySteering()
     {
-        if(Mathf.Abs(input.x) > 0)
+        float speed = rb.linearVelocity.magnitude;
+
+        // Só vira se estiver em movimento
+        if (speed < 0.3f) return;
+
+        // Steering proporcional à velocidade mas com limite
+        float speedFactor = Mathf.Clamp01(speed / maxSpeed);
+        float steerAmount = input.x * steering * speedFactor * Time.fixedDeltaTime;
+
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, steerAmount, 0f));
+    }
+
+    void ApplyGrip()
+    {
+        // Cancela velocidade lateral — simula aderência dos pneus
+        Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
+        localVelocity.x = Mathf.Lerp(localVelocity.x, 0f, grip * Time.fixedDeltaTime);
+        rb.linearVelocity = transform.TransformDirection(localVelocity);
+
+        // Redireciona a velocidade para a frente do carro
+        float speed = rb.linearVelocity.magnitude;
+        if (speed > 0.1f)
         {
-           rb.AddForce(rb.transform.right * steeringMultiplier * input.x);
+            rb.linearVelocity = Vector3.Lerp(
+                rb.linearVelocity,
+                transform.forward * speed,
+                grip * Time.fixedDeltaTime
+            );
         }
+    }
+
+    void LimitSpeed()
+    {
+        if (rb.linearVelocity.magnitude > maxSpeed)
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
     }
 
     public void SetInput(Vector2 inputVector)
