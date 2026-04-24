@@ -17,39 +17,46 @@ public class CarHandler : MonoBehaviour
     [SerializeField] float steering = 130f;
     [SerializeField] float grip = 5f;
 
+    // Valores máximos internos
+    float maxSteerVelocity = 2f;
+    float maxForwardVelocity = 30f;
+
     Vector2 input = Vector2.zero;
     bool isExploded = false;
 
+    // Emissive (luzes de travão)
     float emissiveColorMultiplier = 0f;
     Color emissiveColor = Color.red;
     int _EmissionColor = Shader.PropertyToID("_EmissionColor");
 
     void Update()
-{
-    if (isExploded)
-        return;
-
-    gameModel.transform.rotation = Quaternion.Euler(0, rb.linearVelocity.x * 5, 0);
-
-    if (carMeshRenderer != null)
     {
-        float desiredCarEmissiveColorMultiplier = 0f;
+        if (isExploded) return;
 
-        if (input.y < 0)
-            desiredCarEmissiveColorMultiplier = 4.0f;
+        // Rotação visual do modelo com a velocidade
+        if (gameModel != null)
+            gameModel.transform.rotation = Quaternion.Euler(0, rb.linearVelocity.x * 5, 0);
 
-        emissiveColorMultiplier = Mathf.Lerp(
-            emissiveColorMultiplier,
-            desiredCarEmissiveColorMultiplier,
-            Time.deltaTime * 4
-        );
+        // Emissive nas travagens
+        if (carMeshRenderer != null)
+        {
+            float desiredCarEmissiveColorMultiplier = 0f;
 
-        carMeshRenderer.material.SetColor(
-            _EmissionColor,
-            emissiveColor * emissiveColorMultiplier
-        );
+            if (input.y < 0)
+                desiredCarEmissiveColorMultiplier = 4.0f;
+
+            emissiveColorMultiplier = Mathf.Lerp(
+                emissiveColorMultiplier,
+                desiredCarEmissiveColorMultiplier,
+                Time.deltaTime * 4
+            );
+
+            carMeshRenderer.material.SetColor(
+                _EmissionColor,
+                emissiveColor * emissiveColorMultiplier
+            );
+        }
     }
-}
 
     private void FixedUpdate()
     {
@@ -67,18 +74,20 @@ public class CarHandler : MonoBehaviour
 
         if (input.y > 0)
         {
+            // Acelerar
             rb.linearDamping = 0.5f;
             rb.AddForce(transform.forward * acceleration, ForceMode.Acceleration);
         }
         else if (input.y < 0)
         {
+            // Travar apenas se estiver a mover para a frente
             rb.linearDamping = 0.5f;
-
             if (localVelocityZ > 0.1f)
                 rb.AddForce(-transform.forward * braking, ForceMode.Acceleration);
         }
         else
         {
+            // Sem input — abranda naturalmente
             rb.linearDamping = 3f;
         }
     }
@@ -86,8 +95,11 @@ public class CarHandler : MonoBehaviour
     void ApplySteering()
     {
         float speed = rb.linearVelocity.magnitude;
+
+        // Só vira se estiver em movimento
         if (speed < 0.3f) return;
 
+        // Steering proporcional à velocidade mas com limite
         float speedFactor = Mathf.Clamp01(speed / maxSpeed);
         float steerAmount = input.x * steering * speedFactor * Time.fixedDeltaTime;
 
@@ -96,9 +108,21 @@ public class CarHandler : MonoBehaviour
 
     void ApplyGrip()
     {
+        // Cancela velocidade lateral — simula aderência dos pneus
         Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
         localVelocity.x = Mathf.Lerp(localVelocity.x, 0f, grip * Time.fixedDeltaTime);
         rb.linearVelocity = transform.TransformDirection(localVelocity);
+
+        // Redireciona a velocidade para a frente do carro (v2 - melhorado)
+        float speed = rb.linearVelocity.magnitude;
+        if (speed > 0.1f)
+        {
+            rb.linearVelocity = Vector3.Lerp(
+                rb.linearVelocity,
+                transform.forward * speed,
+                grip * Time.fixedDeltaTime
+            );
+        }
     }
 
     void LimitSpeed()
@@ -111,6 +135,12 @@ public class CarHandler : MonoBehaviour
     {
         inputVector.Normalize();
         input = inputVector;
+    }
+
+    public void SetMaxSpeed(float newMaxSpeed)
+    {
+        maxSpeed = newMaxSpeed;
+        maxForwardVelocity = newMaxSpeed;
     }
 
     IEnumerator SlowDownTimeCO()
