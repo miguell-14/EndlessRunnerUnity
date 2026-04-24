@@ -17,19 +17,16 @@ public class UIHandler : MonoBehaviour
 
     // Reference
     CarHandler playerCarHandler;
-
-    void Awake()
-    {
-        playerCarHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<CarHandler>();
-
-        // ✅ Correto
-        playerCarHandler.OnPlayerCrashed += PlayerCarHandler_OnPlayerCrashed;
-    }
-
+    
     void Start()
     {
         gameOverCanvasGroup.interactable = false;
         gameOverCanvasGroup.alpha = 0;
+
+        playerCarHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<CarHandler>();
+
+        // ✅ Correto
+        playerCarHandler.OnPlayerCrashed += PlayerCarHandler_OnPlayerCrashed;
     }
 
     void Update()

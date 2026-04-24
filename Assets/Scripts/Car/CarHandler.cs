@@ -6,8 +6,10 @@ public class CarHandler : MonoBehaviour
     [SerializeField] Rigidbody rb;
 
     public Transform gameModel;
-    public MeshRenderer carMeshRenderer;
-
+    
+    [SerializeField]
+    MeshRenderer carMeshRender;
+    public MeshRenderer CarMeshRender => carMeshRender;
     [SerializeField] ExplodeHandler explodeHandler;
 
     [Header("Car Settings")]
@@ -43,12 +45,13 @@ public class CarHandler : MonoBehaviour
 
     void Update()
     {
-        if (isExploded) return;
+        if (isExploded)
+            return;
 
         if (gameModel != null)
             gameModel.transform.rotation = Quaternion.Euler(0, rb.linearVelocity.x * 5, 0);
 
-        if (carMeshRenderer != null)
+        if (carMeshRender != null)
         {
             float desiredCarEmissiveColorMultiplier = 0f;
 
@@ -61,7 +64,7 @@ public class CarHandler : MonoBehaviour
                 Time.deltaTime * 4
             );
 
-            carMeshRenderer.material.SetColor(
+            carMeshRender.material.SetColor(
                 _EmissionColor,
                 emissiveColor * emissiveColorMultiplier
             );
@@ -171,21 +174,20 @@ public class CarHandler : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"Hit {collision.collider.name}");
+        float impactForce = collision.relativeVelocity.magnitude;
+
+        if (impactForce < 5f) return; // 👈 ignora colisões fracas
+
+        Debug.Log($"Hit {collision.collider.name} with force {impactForce}");
 
         Vector3 velocity = rb.linearVelocity;
 
         if (explodeHandler != null)
-            explodeHandler.Explode(velocity * 45);
+                explodeHandler.Explode(velocity * 45);
 
         isExploded = true;
 
-
-
-
-        //Trigger event
-        OnPlayerCrashed?.Invoke(this);        
-
+        OnPlayerCrashed?.Invoke(this);
         StartCoroutine(SlowDownTimeCO());
     }
 }
