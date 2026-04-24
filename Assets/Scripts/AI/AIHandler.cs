@@ -13,40 +13,48 @@ public class AIHandler : MonoBehaviour
     
     [SerializeField]
     MeshCollider meshCollider;
+
     RaycastHit[] raycastHits = new RaycastHit[1];
     bool isCarAhead = false;
+
+    int drivingInLane = 0;
 
     //Timing
     WaitForSeconds wait = new WaitForSeconds(0.2f);
 
     private void Awake()
     {
-        if(CompareTag("Player"))
+        if (CompareTag("Player"))
         {
             Destroy(this);
             return;
         }
     }
     
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         StartCoroutine(UpdateLessOfTenCO());
     }
 
-    // Update is called once per frame
     void Update()
     {
         float accelerationInput = 1.0f;
-        float steerInput = 0.0f;
 
         if (isCarAhead)
             accelerationInput = -1;
-       
-        steerInput = Mathf.Clamp(steerInput, -1f, 1.0f);
 
-        carHandler.SetInput(new Vector2(steerInput, accelerationInput));
+        float desiredPositionX = Utils.CarLanes[drivingInLane];
+
+        // Mantém o carro na faixa (sem steering)
+        Vector3 position = transform.position;
+        position.x = Mathf.Lerp(position.x, desiredPositionX, Time.deltaTime * 3f);
+        transform.position = position;
+
+        // Mantém o carro sempre alinhado para a frente
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+
+        // Sem steering → sempre em frente
+        carHandler.SetInput(new Vector2(0f, accelerationInput));
     }
 
     IEnumerator UpdateLessOfTenCO()
@@ -62,19 +70,31 @@ public class AIHandler : MonoBehaviour
     {
         meshCollider.enabled = false;
 
-        int numberOfHits = Physics.BoxCastNonAlloc(transform.position, Vector3.one * 0.25f, transform.forward, raycastHits, Quaternion.identity, 2, otherCarsLayerMask);
+        int numberOfHits = Physics.BoxCastNonAlloc(
+            transform.position,
+            Vector3.one * 0.25f,
+            transform.forward,
+            raycastHits,
+            Quaternion.identity,
+            2,
+            otherCarsLayerMask
+        );
 
         meshCollider.enabled = true;
 
-        if(numberOfHits > 0)
+        if (numberOfHits > 0)
             return true;
         
         return false;
     }
 
     //Events
-    private void onEnable()
+    private void OnEnable()
     {
+        //Set random speed
         carHandler.SetMaxSpeed(Random.Range(2, 4));
+
+        //Set a random lane
+        drivingInLane = Random.Range(0, Utils.CarLanes.Length);
     }
 }
