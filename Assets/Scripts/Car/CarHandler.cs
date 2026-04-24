@@ -11,6 +11,10 @@ public class CarHandler : MonoBehaviour
     [SerializeField] float steering = 130f;
     [SerializeField] float grip = 5f;
 
+    //Max Values
+    float maxSteerVelocity = 2;
+    float maxForwardVelocity = 30;
+
     Vector2 input = Vector2.zero;
 
     private void FixedUpdate()
@@ -88,5 +92,10 @@ public class CarHandler : MonoBehaviour
     {
         inputVector.Normalize();
         input = inputVector;
+    }
+
+    public void SetMaxSpeed(float newMaxSpeed)
+    {
+        maxForwardVelocity = newMaxSpeed;
     }
 }
