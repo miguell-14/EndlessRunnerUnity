@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using System;
 public class CarHandler : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
@@ -27,6 +27,9 @@ public class CarHandler : MonoBehaviour
     float carStartPositionZ;
     float distanceTravelled = 0;
     public float DistanceTravelled => distanceTravelled;
+
+    //Events
+    public event Action<CarHandler> OnPlayerCrashed;
 
     // Emissive
     float emissiveColorMultiplier = 0f;
@@ -176,6 +179,12 @@ public class CarHandler : MonoBehaviour
             explodeHandler.Explode(velocity * 45);
 
         isExploded = true;
+
+
+
+
+        //Trigger event
+        OnPlayerCrashed?.Invoke(this);        
 
         StartCoroutine(SlowDownTimeCO());
     }
