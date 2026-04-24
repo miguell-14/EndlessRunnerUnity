@@ -17,11 +17,28 @@ public class CarHandler : MonoBehaviour
     [SerializeField] float steering = 130f;
     [SerializeField] float grip = 5f;
 
+    [Header("SFX")]
+    [SerializeField]
+    AudioSource carEngineAS;
+
+    [SerializeField]
+    AnimationCurve carPitchAnimationCurve;
+
+    [SerializeField]
+    AudioSource carSkidAS;
+
+    [SerializeField]
+    AudioSource carCrashAS;
+
+
+
+
     float maxSteerVelocity = 2f;
     float maxForwardVelocity = 30f;
 
     Vector2 input = Vector2.zero;
     bool isExploded = false;
+    bool isPlayer;
 
     //Stats
     float carStartPositionZ;
@@ -33,14 +50,23 @@ public class CarHandler : MonoBehaviour
     Color emissiveColor = Color.red;
     int _EmissionColor = Shader.PropertyToID("_EmissionColor");
 
-    void Start()
+   void Start()
     {
+        isPlayer = CompareTag("Player");
+
         carStartPositionZ = transform.position.z;
+
+        if (isPlayer && carEngineAS != null)
+            carEngineAS.Play();
     }
 
     void Update()
     {
-        if (isExploded) return;
+        if (isExploded) 
+        {
+            FadeOutCarAudio();
+            return;
+        }
 
         if (gameModel != null)
             gameModel.transform.rotation = Quaternion.Euler(0, rb.linearVelocity.x * 5, 0);
@@ -65,6 +91,7 @@ public class CarHandler : MonoBehaviour
         }
 
         distanceTravelled = transform.position.z - carStartPositionZ;
+        UpdateCarAudio();
     }
 
     private void FixedUpdate()
@@ -134,6 +161,28 @@ public class CarHandler : MonoBehaviour
         if (rb.linearVelocity.magnitude > maxSpeed)
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
     }
+
+    void UpdateCarAudio()
+    {
+        if (!isPlayer)
+            return;
+
+        float carMaxSpeedPercentage = rb.linearVelocity.z / maxForwardVelocity;
+
+        carEngineAS.pitch = carPitchAnimationCurve.Evaluate(carMaxSpeedPercentage);
+
+        
+    }
+
+    void FadeOutCarAudio()
+    {
+        if (!isPlayer)
+            return;
+
+        carEngineAS.volume = Mathf.Lerp(carEngineAS.volume, 0, Time.deltaTime * 10);
+        carSkidAS.volume = Mathf.Lerp(carSkidAS.volume, 0, Time.deltaTime * 10);
+    }
+
 
     public void SetInput(Vector2 inputVector)
     {
