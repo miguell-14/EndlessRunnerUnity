@@ -1,8 +1,14 @@
+using System.Collections;
 using UnityEngine;
 
 public class CarHandler : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
+
+    public Transform gameModel;
+    public MeshRenderer carMeshRenderer;
+
+    [SerializeField] ExplodeHandler explodeHandler;
 
     [Header("Car Settings")]
     [SerializeField] float maxSpeed = 10f;
@@ -11,14 +17,51 @@ public class CarHandler : MonoBehaviour
     [SerializeField] float steering = 130f;
     [SerializeField] float grip = 5f;
 
-    //Max Values
-    float maxSteerVelocity = 2;
-    float maxForwardVelocity = 30;
+    // Valores máximos internos
+    float maxSteerVelocity = 2f;
+    float maxForwardVelocity = 30f;
 
     Vector2 input = Vector2.zero;
+    bool isExploded = false;
+
+    // Emissive (luzes de travão)
+    float emissiveColorMultiplier = 0f;
+    Color emissiveColor = Color.red;
+    int _EmissionColor = Shader.PropertyToID("_EmissionColor");
+
+    void Update()
+    {
+        if (isExploded) return;
+
+        // Rotação visual do modelo com a velocidade
+        if (gameModel != null)
+            gameModel.transform.rotation = Quaternion.Euler(0, rb.linearVelocity.x * 5, 0);
+
+        // Emissive nas travagens
+        if (carMeshRenderer != null)
+        {
+            float desiredCarEmissiveColorMultiplier = 0f;
+
+            if (input.y < 0)
+                desiredCarEmissiveColorMultiplier = 4.0f;
+
+            emissiveColorMultiplier = Mathf.Lerp(
+                emissiveColorMultiplier,
+                desiredCarEmissiveColorMultiplier,
+                Time.deltaTime * 4
+            );
+
+            carMeshRenderer.material.SetColor(
+                _EmissionColor,
+                emissiveColor * emissiveColorMultiplier
+            );
+        }
+    }
 
     private void FixedUpdate()
     {
+        if (isExploded) return;
+
         ApplyAcceleration();
         ApplySteering();
         ApplyGrip();
@@ -70,7 +113,7 @@ public class CarHandler : MonoBehaviour
         localVelocity.x = Mathf.Lerp(localVelocity.x, 0f, grip * Time.fixedDeltaTime);
         rb.linearVelocity = transform.TransformDirection(localVelocity);
 
-        // Redireciona a velocidade para a frente do carro
+        // Redireciona a velocidade para a frente do carro (v2 - melhorado)
         float speed = rb.linearVelocity.magnitude;
         if (speed > 0.1f)
         {
@@ -96,6 +139,40 @@ public class CarHandler : MonoBehaviour
 
     public void SetMaxSpeed(float newMaxSpeed)
     {
+        maxSpeed = newMaxSpeed;
         maxForwardVelocity = newMaxSpeed;
+    }
+
+    IEnumerator SlowDownTimeCO()
+    {
+        while (Time.timeScale > 0.2f)
+        {
+            Time.timeScale -= Time.deltaTime * 2;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        while (Time.timeScale < 1.0f)
+        {
+            Time.timeScale += Time.deltaTime;
+            yield return null;
+        }
+
+        Time.timeScale = 1.0f;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"Hit {collision.collider.name}");
+
+        Vector3 velocity = rb.linearVelocity;
+
+        if (explodeHandler != null)
+            explodeHandler.Explode(velocity * 45);
+
+        isExploded = true;
+
+        StartCoroutine(SlowDownTimeCO());
     }
 }
