@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "EndlessRunnerUnity.slnx",
+    "dotnet.defaultSolution": "EndlessRun.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }
