@@ -1,13 +1,13 @@
-#  Endless Driving Game — README
+# Endless Driving Game — README
 
-##  Elementos do Grupo
+## Elementos do Grupo
 
 * Miguel Rebouço — nº31429
 * João Gomes — nº35780
 
 ---
 
-##  Versão do Unity
+## Versão do Unity
 
 * **Unity:** 6000.4.3f1
 * Tecnologias utilizadas:
@@ -17,9 +17,9 @@
 
 ---
 
-##  Descrição do Projeto
+## Descrição do Projeto
 
-Este projeto consiste num jogo do tipo **endless runner**, mas adaptado para condução de um carro (**endless driving game**).
+Este projeto consiste num jogo do tipo **endless runner**, adaptado para condução de um carro (**endless driving game**).
 O jogador controla um veículo que se desloca continuamente, enquanto tenta evitar obstáculos e outros carros gerados aleatoriamente.
 
 ### Funcionalidades Implementadas
@@ -27,18 +27,19 @@ O jogador controla um veículo que se desloca continuamente, enquanto tenta evit
 * Movimento do carro controlado pelo jogador
 * Geração aleatória de carros inimigos
 * Sistema de pontuação baseado na distância percorrida (scoreboard)
-* Estrutura base para sistema de som (**em desenvolvimento**)
-* Interface de utilizador (UI) (**em desenvolvimento**)
+* Efeitos sonoros
+* Interface de utilizador (UI)
 
 ---
 
-##  Jogabilidade
+## Jogabilidade
 
 * **Controlos:**
 
   * `W` — Acelerar / andar para a frente
   * `A` — Virar à esquerda
   * `D` — Virar à direita
+  * `S` — Travar
 
 * **Objetivo:**
 
@@ -51,7 +52,7 @@ O jogador controla um veículo que se desloca continuamente, enquanto tenta evit
 
 ---
 
-##  Como Abrir o Projeto
+## Como Abrir o Projeto
 
 1. Abrir o **Unity Hub**
 2. Selecionar **"Open Project"**
@@ -59,53 +60,41 @@ O jogador controla um veículo que se desloca continuamente, enquanto tenta evit
 4. Abrir o projeto com a versão **Unity 6000.4.3f1**
 5. Navegar até à cena:
 
-   * `Stage.unity`
+   * `Stage.unity` (menu principal)
 6. Premir **Play** para executar o jogo
 
 ---
 
-##  Assets Multimédia
+## Assets Multimédia
 
 Foram utilizados assets gratuitos:
 
 * **kaykit_citybuilderbits1.0**
 * **kaykit_halloweenbits1.0**
+* Efeitos sonoros gratuitos da **Unity Asset Store**
 
-### Formatos e Características
+### Descrição
 
-* **Texturas:**
-
-  * Formatos comuns (ex: PNG)
-  * Resoluções otimizadas para desempenho em tempo real
-* **Modelos 3D:**
-
-  * Baixa complexidade (low-poly), ideal para jogos estilo arcade
-* **Sons:**
-
-  * *(ainda não implementados)*
+Os modelos utilizados são de baixo número de polígonos, adequados para este tipo de jogo.
+As texturas e modelos foram usados sem alterações significativas, focando-se na integração com a mecânica do jogo.
+Os sons foram retirados de pacotes gratuitos disponíveis na Unity Asset Store.
 
 ### Justificação
 
-A escolha de assets low-poly permite:
-
-* Melhor desempenho
-* Estilo visual consistente
-* Facilidade de integração no Unity
+Os assets foram escolhidos por serem gratuitos e fáceis de integrar no projeto.
 
 ---
 
-##  Observações e Lacunas
+## Observações e Lacunas
 
-* Sistema de som ainda não implementado
-* Interface de utilizador (UI) ainda em desenvolvimento
 * Possíveis melhorias futuras:
 
-  * Adição de efeitos sonoros e música
-  * Melhor feedback visual ao jogador
-  * Aumento da variedade de obstáculos
+  * Adição de checkpoints e dificuldade crescente
+  * Gravar high-score
+  * Diferentes tipos de cenários (Ex. cenário noturno)
 
 ---
 
-##  Notas Finais
+## Notas Finais
 
-O projeto encontra-se funcional ao nível da mecânica principal, com espaço para melhorias em termos de apresentação e experiência do utilizador.
+O projeto encontra-se funcional ao nível da mecânica principal, incluindo interface e som, podendo ainda ser melhorado em termos de conteúdo e apresentação.
