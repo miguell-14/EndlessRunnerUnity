@@ -784,6 +784,11 @@ MonoBehaviour:
   gameModel: {fileID: 3167463878752534253}
   carMeshRender: {fileID: 3971174100202619063}
   explodeHandler: {fileID: 1220825540137615845}
+  maxSpeed: 20
+  acceleration: 10
+  braking: 20
+  steering: 55
+  grip: 10
   carEngineAS: {fileID: 4552460113934070355}
   carPitchAnimationCurve:
     serializedVersion: 2

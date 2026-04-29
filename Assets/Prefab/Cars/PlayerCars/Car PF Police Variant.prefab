@@ -736,7 +736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6716340535108303833, guid: 1b539e6824bb949cab795f175c3b2274, type: 3}
       propertyPath: maxSpeed
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6716340535108303833, guid: 1b539e6824bb949cab795f175c3b2274, type: 3}
       propertyPath: carMeshRender
