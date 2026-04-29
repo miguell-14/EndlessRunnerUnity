@@ -7,7 +7,7 @@ public class AI : MonoBehaviour
     [SerializeField]
     GameObject[] carAIPreFabs;
 
-    GameObject[] carAIPool = new GameObject[20];
+    GameObject[] carAIPool = new GameObject[30];
 
     Transform playerCarTransform;
 
@@ -52,7 +52,7 @@ public class AI : MonoBehaviour
 
     void SpawnNewCars()
     {
-        if (Time.time - timeLastCarSpawned < 0.6)
+        if (Time.time - timeLastCarSpawned < 1)
             return;
 
         GameObject carToSpawn = null;

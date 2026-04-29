@@ -786,8 +786,8 @@ MonoBehaviour:
   explodeHandler: {fileID: 1220825540137615845}
   maxSpeed: 20
   acceleration: 10
-  braking: 20
-  steering: 55
+  braking: 5
+  steering: 80
   grip: 10
   carEngineAS: {fileID: 4552460113934070355}
   carPitchAnimationCurve:
