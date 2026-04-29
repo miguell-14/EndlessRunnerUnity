@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Car AI Hatchback Base PF Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 1853590355560999647, guid: 1e238246dd328424c8da5b96b7070129, type: 3}
+      propertyPath: gameModel
+      value: 
+      objectReference: {fileID: 5936014462470889890}
     - target: {fileID: 3340752722755144632, guid: 1e238246dd328424c8da5b96b7070129, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -75,6 +79,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a7f04bf89ecf4a9b868520b1eb9f7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarHandler
+--- !u!4 &5936014462470889890 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 812324027421630865, guid: 1e238246dd328424c8da5b96b7070129, type: 3}
+  m_PrefabInstance: {fileID: 6423542445536149555}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6246415539610818030 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1119909787831113181, guid: 1e238246dd328424c8da5b96b7070129, type: 3}

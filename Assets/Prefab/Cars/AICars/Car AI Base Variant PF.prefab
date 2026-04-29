@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 116
       objectReference: {fileID: 0}
+    - target: {fileID: 1139755670981789986, guid: 36e0ebf431b1a4f2a997414cbc76bce7, type: 3}
+      propertyPath: gameModel
+      value: 
+      objectReference: {fileID: 3134401592390683139}
     - target: {fileID: 1283431699542975254, guid: 36e0ebf431b1a4f2a997414cbc76bce7, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -73,3 +77,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36e0ebf431b1a4f2a997414cbc76bce7, type: 3}
+--- !u!4 &3134401592390683139 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9191846750048667551, guid: 36e0ebf431b1a4f2a997414cbc76bce7, type: 3}
+  m_PrefabInstance: {fileID: 6120495587388771740}
+  m_PrefabAsset: {fileID: 0}

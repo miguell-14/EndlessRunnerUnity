@@ -1,5 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class InputHandler : MonoBehaviour
@@ -7,23 +8,30 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     CarHandler carHandler;
 
-    private PlayerInput playerInput;
-    private InputAction moveAction;
-    private InputAction resetAction;
-
-    void Awake()
+    private void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
-        moveAction  = playerInput.actions["Move"];
-        resetAction = playerInput.actions["Reset"];
+        if (!CompareTag("Player"))
+        {
+            Destroy(this);
+            return;
+        }
     }
 
     void Update()
     {
-        Vector2 input = moveAction.ReadValue<Vector2>();
+        Vector2 input = Vector2.zero;
+
+        input.x = Input.GetAxis("Horizontal");
+        input.y = Input.GetAxis("Vertical");
+
         carHandler.SetInput(input);
 
-        if (resetAction.WasPressedThisFrame())
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            //Restore time scale
+            Time.timeScale = 1.0f;
+
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }
