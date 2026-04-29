@@ -487,10 +487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCarSpawner
   carPrefabs:
   - {fileID: 5370066483768002751, guid: 1b539e6824bb949cab795f175c3b2274, type: 3}
-  - {fileID: 1518269992638318561, guid: 938aaab4858604617a32a4564e7406a4, type: 3}
-  - {fileID: 1329866253529958925, guid: 16b682b7a18ae46ec941811c4b3b5840, type: 3}
-  - {fileID: 7738929068840754819, guid: 1f6588aa7c7e144f8a88df56e9c8e04f, type: 3}
-  - {fileID: 6945526758970390594, guid: 926f6136d45b942a19827d57db925f9a, type: 3}
+  - {fileID: 1225256918767145519, guid: 96501526bc68c48e19d7805cf7a9b8ab, type: 3}
   cinemachineCamera: {fileID: 0}
   isMainMenu: 1
 --- !u!1 &371433445
